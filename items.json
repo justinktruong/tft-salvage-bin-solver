@@ -1,0 +1,58 @@
+{
+    "components": [
+    "rod",
+    "bow",
+    "sword",
+    "glove",
+    "tear",
+    "belt",
+    "vest",
+    "cloak"
+  ],
+
+  "recipes": {
+    "rabadon": ["rod", "rod"],
+    "rageblade": ["rod", "bow"],
+    "gunblade": ["rod", "sword"],
+    "jewel guantlet": ["rod", "glove"],
+    "archangel": ["rod", "tear"],
+    "morello": ["rod", "belt"],
+    "crownguard": ["rod", "vest"],
+    "spark": ["rod", "cloak"],
+
+    "red buff": ["bow", "bow"],
+    "giant slayer": ["bow", "sword"],
+    "last whisper": ["bow", "glove"],
+    "void staff": ["bow", "tear"],
+    "nashor": ["bow", "belt"],
+    "titan": ["bow", "vest"],
+    "kraken": ["bow", "cloak"],
+
+    "deathblade": ["sword", "sword"],
+    "infinity edge": ["sword", "glove"],
+    "shojin": ["sword", "tear"],
+    "sterak": ["sword", "belt"],
+    "eon": ["sword", "vest"],
+    "bloodthirster": ["sword", "cloak"],
+
+    "theif's glove": ["glove", "glove"],
+    "hoj": ["glove", "tear"],
+    "striker": ["glove", "belt"],
+    "steadfast": ["glove", "vest"],
+    "qss": ["glove", "cloak"],
+
+    "blue buff": ["tear", "tear"],
+    "spirit visage": ["tear", "belt"],
+    "vow": ["tear", "vest"],
+    "adaptive": ["tear", "cloak"],
+
+    "warmogs": ["belt", "belt"],
+    "sunfire": ["belt", "vest"],
+    "evenshroud": ["belt", "cloak"],
+
+    "bramble": ["vest", "vest"],
+    "gargoyle": ["vest", "cloak"],
+
+    "dragon claw": ["cloak", "cloak"]
+  }
+}
