@@ -1,0 +1,23 @@
+.item-container,
+.selected-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px; 
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.item-btn,
+.selected-item-btn {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.item-btn img,
+.selected-item-btn img {
+    width: 50px;  
+    height: 50px;
+    border-radius: 8px;
+    border: 1px solid #444; 
+}

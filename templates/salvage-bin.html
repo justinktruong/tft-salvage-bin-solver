@@ -6,5 +6,40 @@
 
 {% block main %}
 
+<div class="card border-secondary mb-4 text-start">
+    <div class="card-header">
+        <h4 class="mb-0">1. Item Inventory</h4>
+    </div>
+    
+    <div class="card-body">
+        
+        <input type="text" id="itemSearch" class="form-control mb-3" placeholder="Search items..." aria-label="Search items">
+        
+        <div class="item-container" id="available-items">
+            {% for item in item_data['components'] %}
+                <button class="item-btn" data-name="{{ item }}">
+                    <img src="/static/item_images/{{ item }}.png" alt="{{ item }}">
+                </button>
+            {% endfor %}
+            
+            {% for item in item_data['recipes'] %}
+                <button class="item-btn" data-name="{{ item }}">
+                    <img src="/static/item_images/{{ item }}.png" alt="{{ item }}">
+                </button>
+            {% endfor %}
+        </div> 
+        
+        <hr class="my-4 border-secondary">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="mb-0">Selected Items: </h6>   
+            <button class="btn btn-outline-danger btn-sm" type="button" id="clearBtn">Clear</button>
+        </div>
+        
+        <div class="selected-container" id="selected-items"></div>
 
+    </div> 
+    
+</div> 
+
+<script src="/static/scripts/salvage-bin.js"></script>
 {% endblock %}

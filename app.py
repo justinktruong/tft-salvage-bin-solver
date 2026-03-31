@@ -16,5 +16,5 @@ except json.JSONDecodeError:
 
 @app.route("/")
 def index():
-    return render_template("salvage-bin.html")
+    return render_template("salvage-bin.html", item_data=data)
 
