@@ -8,22 +8,22 @@
 
 <div class="card border-secondary mb-4 text-start">
     <div class="card-header">
-        <h4 class="mb-0">1. Item Inventory</h4>
+        <h4 class="mb-0">Select Your Current Items</h4>
     </div>
     
     <div class="card-body">
         
-        <input type="text" id="itemSearch" class="form-control mb-3" placeholder="Search items..." aria-label="Search items">
+        <input type="text" id="curItemSearch" class="form-control mb-3" placeholder="Search items..." aria-label="Search items">
         
-        <div class="item-container" id="available-items">
+        <div class="item-container" id="availableItems">
             {% for item in item_data['components'] %}
-                <button class="item-btn" data-name="{{ item }}">
+                <button class="cur-item-btn" data-name="{{ item }}">
                     <img src="/static/item_images/{{ item }}.png" alt="{{ item }}">
                 </button>
             {% endfor %}
             
             {% for item in item_data['recipes'] %}
-                <button class="item-btn" data-name="{{ item }}">
+                <button class="cur-item-btn" data-name="{{ item }}">
                     <img src="/static/item_images/{{ item }}.png" alt="{{ item }}">
                 </button>
             {% endfor %}
@@ -35,7 +35,7 @@
             <button class="btn btn-outline-danger btn-sm" type="button" id="clearBtn">Clear</button>
         </div>
         
-        <div class="selected-container" id="selected-items"></div>
+        <div class="selected-container" id="selectedItems"></div>
 
     </div> 
     

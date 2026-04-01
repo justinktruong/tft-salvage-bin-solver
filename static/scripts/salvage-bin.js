@@ -1,12 +1,12 @@
 // ==========================================
 // DOM ELEMENTS 
 // ==========================================
-const searchInput = document.querySelector('#itemSearch'); 
-const allItems = document.querySelectorAll('.item-btn');
+const curItemSearchInput = document.querySelector('#curItemSearch'); 
+const allItems = document.querySelectorAll('.cur-item-btn');
+const curItems = [];
 
-const selectedContainer = document.querySelector('#selected-items');
+const selectedContainer = document.querySelector('#selectedItems');
 const clearBtn = document.querySelector('#clearBtn');
-
 
 // ==========================================
 // FUNCTIONS
@@ -41,27 +41,38 @@ function selectItem(event) {
     // Create button element
     const newItem = document.createElement('button');
     newItem.classList.add('selected-item-btn');
+    newItem.setAttribute('data-name', itemName);
     newItem.appendChild(itemImage);
     newItem.addEventListener('click', removeItem);
 
+    curItems.push(itemName);
+    console.log(curItems);
     selectedContainer.appendChild(newItem);
 }
 
 // Remove item from selection
 function removeItem(event) {
     const clickedButton = event.currentTarget;
+    const itemName = clickedButton.getAttribute('data-name');
+    const index = curItems.indexOf(itemName);
+    if (index !== -1) {
+        curItems.splice(index, 1);
+    }
+    console.log(curItems);
     clickedButton.remove();
 }
 
 // Clear all selected items
 function clearItem() {
+    curItems.length = 0;
+    console.log(curItems);
     selectedContainer.replaceChildren();
 }
 
 // ==========================================
 // EVENT LISTENERS
 // ==========================================
-searchInput.addEventListener('keyup', filterSearch);
+curItemSearchInput.addEventListener('keyup', filterSearch);
 
 allItems.forEach(function(item) {
     item.addEventListener('click', selectItem);
