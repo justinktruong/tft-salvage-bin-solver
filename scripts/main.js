@@ -1,57 +1,74 @@
-// ==========================================
-// DOM ELEMENTS 
-// ==========================================
-const curItemSearchInput = document.querySelector('#curItemSearch'); 
-const allItems = document.querySelectorAll('.cur-item-btn');
-const curItems = [];
+import { fetchJSON } from './fetch.js';
+import { createItemButton } from './ui.js';
 
+
+// ==========================================
+// GLOBAL VARIABLES & DOM ELEMENTS 
+// ==========================================
+let itemData = null;
+const curItems = []; 
+const curItemSearchInput = document.querySelector('#curItemSearch');
 const selectedContainer = document.querySelector('#selectedItems');
 const clearBtn = document.querySelector('#clearBtn');
 
+
 // ==========================================
-// FUNCTIONS
+// INITIALIZATION
+// ==========================================
+async function initApp() {
+    itemData = await fetchJSON('../items.json');
+    if (itemData) {
+        console.log('Successfully loaded data:', itemData);
+
+        // Used Google Gemini to help me write
+        const container = document.querySelector('#availableItems');
+        const itemNames = [
+            ...itemData.components,
+            ...Object.keys(itemData.recipes)
+        ]
+        const fragment = document.createDocumentFragment();
+    
+        itemNames.forEach(function(itemName) {
+            fragment.appendChild(createItemButton(itemName, 'cur-item-btn', handleSelectItem));
+        })
+        container.appendChild(fragment);
+    }
+}
+
+
+// ==========================================
+// EVENT HANDLERS
 // ==========================================
 // Filter for items using user's search input
 // Reference: https://www.w3schools.com/howto/howto_js_filter_lists.asp
-function filterSearch(event) {
+function handleFilterSearch(event) {
     // Set input to lowercase + Strip punctuations and white space from input
     let searchTerm = event.target.value.replace(/[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g, '').trim().toLowerCase();
 
+    
+    const allItems = document.querySelectorAll('.cur-item-btn');
     allItems.forEach(function(item) {
         const itemName = item.getAttribute('data-name')
         if (itemName.includes(searchTerm)) {
-            item.style.display = '';;
+            item.style.display = '';
         }
         else {
-            item.style.display = 'none';    // Hide items that do not match input
+            item.style.display = 'none';
         }
     });
 }
 
 // Display items the user has selected
-function selectItem(event) {
+function handleSelectItem(event) {
     const clickedButton = event.currentTarget;
     const itemName = clickedButton.getAttribute('data-name');
-
-    // Create item image element 
-    const itemImage = document.createElement('img');
-    itemImage.src = `/static/item_images/${itemName}.png`;
-    itemImage.alt = `${itemName}`;
-
-    // Create button element
-    const newItem = document.createElement('button');
-    newItem.classList.add('selected-item-btn');
-    newItem.setAttribute('data-name', itemName);
-    newItem.appendChild(itemImage);
-    newItem.addEventListener('click', removeItem);
-
+    selectedContainer.appendChild(createItemButton(itemName, 'selected-item-btn', handleRemoveItem));
     curItems.push(itemName);
     console.log(curItems);
-    selectedContainer.appendChild(newItem);
 }
 
 // Remove item from selection
-function removeItem(event) {
+function handleRemoveItem(event) {
     const clickedButton = event.currentTarget;
     const itemName = clickedButton.getAttribute('data-name');
     const index = curItems.indexOf(itemName);
@@ -63,7 +80,7 @@ function removeItem(event) {
 }
 
 // Clear all selected items
-function clearItem() {
+function handleClearItem() {
     curItems.length = 0;
     console.log(curItems);
     selectedContainer.replaceChildren();
@@ -72,10 +89,7 @@ function clearItem() {
 // ==========================================
 // EVENT LISTENERS
 // ==========================================
-curItemSearchInput.addEventListener('keyup', filterSearch);
+curItemSearchInput.addEventListener('keyup', handleFilterSearch);
+clearBtn.addEventListener('click', handleClearItem);
 
-allItems.forEach(function(item) {
-    item.addEventListener('click', selectItem);
-});
-
-clearBtn.addEventListener('click', clearItem);
+initApp();
