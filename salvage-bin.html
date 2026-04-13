@@ -20,7 +20,7 @@
     <body>
 
         <main class="container py-5 text-center">
-            
+            <!-- Select Current Items -->
             <div class="card border-secondary mb-4 text-start">
                 <div class="card-header">
                     <h4 class="mb-0">Select Your Current Items</h4>
@@ -28,17 +28,48 @@
                 
                 <div class="card-body">
                     
-                    <input type="text" id="curItemSearch" class="form-control mb-3" placeholder="Search items..." aria-label="Search items">
+                    <input type="text" id="current-search" class="form-control mb-3" placeholder="Search items..." aria-label="Search items">
                     
-                    <div class="item-container" id="availableItems"></div> 
+                    <div class="item-container" id="current-items"></div> 
                     
                     <hr class="my-4 border-secondary">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h6 class="mb-0">Selected Items: </h6>   
-                        <button class="btn btn-outline-danger btn-sm" type="button" id="clearBtn">Clear</button>
+                        <button class="btn btn-outline-danger btn-sm" type="button" id="current-clear">Clear</button>
                     </div>
                     
-                    <div class="selected-container" id="selectedItems"></div>
+                    <div class="selected-container" id="current-selected"></div>
+
+                </div> 
+                
+            </div> 
+
+            <!-- Select Target Items -->
+            <div class="card border-secondary mb-4 text-start">
+                <div class="card-header">
+                    <h4 class="mb-0">Select Your Target Items</h4>
+                </div>
+                
+                <div class="card-body">
+                    
+                    <input type="text" id="target-search" class="form-control mb-3" placeholder="Search items..." aria-label="Search items">
+                    
+                    <div class="item-container" id="target-items"></div> 
+
+                    <hr class="my-4 border-secondary">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0">Available Components: </h6>
+                    </div>
+
+                    <div class="selected-container" id="available-components"></div>
+                    
+                    <hr class="my-4 border-secondary">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0">Selected Items: </h6>   
+                        <button class="btn btn-outline-danger btn-sm" type="button" id="target-clear">Clear</button>
+                    </div>
+                    
+                    <div class="selected-container" id="target-selected"></div>
 
                 </div> 
                 

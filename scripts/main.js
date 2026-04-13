@@ -1,16 +1,19 @@
 import { fetchJSON } from './fetch.js';
-import { createItemButton } from './ui.js';
+import { createItemButton, createItemIcon } from './ui.js';
 
 
 // ==========================================
 // GLOBAL VARIABLES & DOM ELEMENTS 
 // ==========================================
 let itemData = null;
-const curItems = []; 
-const curItemSearchInput = document.querySelector('#curItemSearch');
-const selectedContainer = document.querySelector('#selectedItems');
-const clearBtn = document.querySelector('#clearBtn');
+const currentItems = []; 
+const availableComponents = [];
 
+const currentSearchInput = document.querySelector('#current-search');
+const currentSelectedContainer = document.querySelector('#current-selected');
+const currentClearBtn = document.querySelector('#current-clear');
+
+const availableComponentsContainer = document.querySelector('#available-components');
 
 // ==========================================
 // INITIALIZATION
@@ -21,15 +24,15 @@ async function initApp() {
         console.log('Successfully loaded data:', itemData);
 
         // Used Google Gemini to help me write
-        const container = document.querySelector('#availableItems');
+        const container = document.querySelector('#current-items');
         const itemNames = [
             ...itemData.components,
             ...Object.keys(itemData.recipes)
         ]
         const fragment = document.createDocumentFragment();
     
-        itemNames.forEach(function(itemName) {
-            fragment.appendChild(createItemButton(itemName, 'cur-item-btn', handleSelectItem));
+        itemNames.forEach((item) => {
+            fragment.appendChild(createItemButton(item, 'current-item-btn', handleSelectItem));
         })
         container.appendChild(fragment);
     }
@@ -45,9 +48,8 @@ function handleFilterSearch(event) {
     // Set input to lowercase + Strip punctuations and white space from input
     let searchTerm = event.target.value.replace(/[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g, '').trim().toLowerCase();
 
-    
-    const allItems = document.querySelectorAll('.cur-item-btn');
-    allItems.forEach(function(item) {
+    const allItems = document.querySelectorAll('.current-item-btn');
+    allItems.forEach((item) => {
         const itemName = item.getAttribute('data-name')
         if (itemName.includes(searchTerm)) {
             item.style.display = '';
@@ -62,34 +64,62 @@ function handleFilterSearch(event) {
 function handleSelectItem(event) {
     const clickedButton = event.currentTarget;
     const itemName = clickedButton.getAttribute('data-name');
-    selectedContainer.appendChild(createItemButton(itemName, 'selected-item-btn', handleRemoveItem));
-    curItems.push(itemName);
-    console.log(curItems);
+    currentSelectedContainer.appendChild(createItemButton(itemName, 'selected-item-btn', handleRemoveItem));
+    currentItems.push(itemName);
+    console.log('Selected Items:', currentItems);
+    renderSalvagedComponents();
 }
 
 // Remove item from selection
 function handleRemoveItem(event) {
     const clickedButton = event.currentTarget;
     const itemName = clickedButton.getAttribute('data-name');
-    const index = curItems.indexOf(itemName);
+    const index = currentItems.indexOf(itemName);
     if (index !== -1) {
-        curItems.splice(index, 1);
+        currentItems.splice(index, 1);
     }
-    console.log(curItems);
+    console.log('Selected Items:', currentItems);
     clickedButton.remove();
+    renderSalvagedComponents();
 }
 
 // Clear all selected items
 function handleClearItem() {
-    curItems.length = 0;
-    console.log(curItems);
-    selectedContainer.replaceChildren();
+    currentItems.length = 0;
+    console.log('Selected Items:', currentItems);
+    currentSelectedContainer.replaceChildren();
+    renderSalvagedComponents();
 }
+
+// Break down current items into components and render icons
+function renderSalvagedComponents() {
+    availableComponents.length = 0;
+    availableComponentsContainer.replaceChildren();
+
+    const fragment = document.createDocumentFragment();
+
+    currentItems.forEach((item) => {
+        if (itemData.components.includes(item)) {
+            fragment.appendChild(createItemIcon(item, 'salvaged-item-icon'));
+            availableComponents.push(item);
+        }
+        else {
+            itemData.recipes[item].forEach((component) => {
+                fragment.appendChild(createItemIcon(component, 'salvaged-item-icon'));
+                availableComponents.push(component);
+            });
+        }
+    });
+    availableComponentsContainer.appendChild(fragment);
+
+    console.log('Available Componets:', availableComponents);
+}
+
 
 // ==========================================
 // EVENT LISTENERS
 // ==========================================
-curItemSearchInput.addEventListener('keyup', handleFilterSearch);
-clearBtn.addEventListener('click', handleClearItem);
+currentSearchInput.addEventListener('keyup', handleFilterSearch);
+currentClearBtn.addEventListener('click', handleClearItem);
 
 initApp();

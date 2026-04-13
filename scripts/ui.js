@@ -14,3 +14,16 @@ export function createItemButton(itemName, btnClass, btnFunction) {
 
     return button;
 }
+
+export function createItemIcon(itemName, iconClass) {
+    const image = document.createElement('img');
+    image.src = `./item-images/${itemName}.png`;
+    image.alt = `${itemName}`;
+
+    const wrapper = document.createElement('div');
+    wrapper.classList.add(iconClass); 
+    wrapper.setAttribute('data-name', itemName);
+    wrapper.appendChild(image);
+
+    return wrapper;
+}
