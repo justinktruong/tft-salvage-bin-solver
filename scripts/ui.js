@@ -7,7 +7,7 @@ export function createItemButton(itemName, btnClass, btnFunction) {
 
     // Create button element
     const button = document.createElement('button');
-    button.classList.add(btnClass);
+    button.classList.add(...btnClass);
     button.setAttribute('data-name', itemName);
     button.appendChild(image);
     button.addEventListener('click', btnFunction);

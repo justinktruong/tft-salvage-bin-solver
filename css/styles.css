@@ -8,18 +8,24 @@
 }
 
 .current-item-btn,
-.selected-item-btn {
+.selected-item-btn,
+.target-item-btn {
     background: none;
     border: none;
     padding: 0;
 }
 
 .current-item-btn img,
-.selected-item-btn img {
+.selected-item-btn img,
+.target-item-btn img {
     width: 50px;  
     height: 50px;
     border-radius: 8px;
     border: 1px solid #444; 
+}
+
+.target-item-unavailable img {
+    opacity: 0.5;
 }
 
 .salvaged-item-icon {
