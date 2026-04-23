@@ -1,5 +1,6 @@
 import { fetchJSON } from './fetch.js';
 import { createItemButton, createItemIcon } from './ui.js';
+import { sanitizeSearch, calcNumberOfComponents, isComponentAvailable, isItemBuildable} from './utils.js';
 
 
 // ==========================================
@@ -53,7 +54,7 @@ async function initApp() {
 // Reference: https://www.w3schools.com/howto/howto_js_filter_lists.asp
 function handleFilterSearch(event) {
     // Set input to lowercase + Strip punctuations and white space from input
-    let searchTerm = event.target.value.replace(/[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g, '').trim().toLowerCase();
+    let searchTerm = sanitizeSearch(event.target.value);
 
     const allItems = document.querySelectorAll('.current-item-btn');
     allItems.forEach((item) => {
@@ -100,23 +101,15 @@ function handleClearItem() {
 
 // Break down current items into components and render icons
 function renderSalvagedComponents() {
-    availableComponents = {};
     availableComponentsContainer.replaceChildren();
 
+    availableComponents = calcNumberOfComponents(currentItems, itemData);
     const fragment = document.createDocumentFragment();
-
-    currentItems.forEach((item) => {
-        if (itemData.components.includes(item)) {
-            fragment.appendChild(createItemIcon(item, 'salvaged-item-icon'));
-            availableComponents[item] = (availableComponents[item] || 0) + 1;
+    for (const [component, count] of Object.entries(availableComponents)) {
+        for (let i = 0; i < count; i++) {
+            fragment.appendChild(createItemIcon(component, 'salvaged-item-icon'));
         }
-        else {
-            itemData.recipes[item].forEach((component) => {
-                fragment.appendChild(createItemIcon(component, 'salvaged-item-icon'));
-                availableComponents[component] = (availableComponents[component] || 0) + 1;
-            });
-        }
-    });
+    }
     availableComponentsContainer.appendChild(fragment);
     highlightCraftableItems();
 
@@ -127,7 +120,8 @@ function renderSalvagedComponents() {
 function highlightCraftableItems() {
     document.querySelectorAll('.target-item-btn').forEach((button) => {
         const item = button.getAttribute('data-name');
-        if (isCraftable(item)) {
+        if (isComponentAvailable(item, itemData, availableComponents) || 
+            isItemBuildable(item, itemData, availableComponents)) {
             button.classList.remove('target-item-unavailable');
             button.disabled = false;
         }
@@ -136,23 +130,6 @@ function highlightCraftableItems() {
             button.disabled = true;
         }
     });
-}
-
-// Check if item is craftable
-function isCraftable(item) {
-    if (itemData.components.includes(item)) return (availableComponents[item] || 0) > 0;
-
-    const requiredComponents = {};
-    itemData.recipes[item].forEach(component => {
-        requiredComponents[component] = (requiredComponents[component] || 0) + 1;
-    });
-    for (const component in requiredComponents) {
-        const required = requiredComponents[component];
-        const available = availableComponents[component] || 0;
-        if (available < required) return false;
-    }
-
-    return true;
 }
 
 // ==========================================
