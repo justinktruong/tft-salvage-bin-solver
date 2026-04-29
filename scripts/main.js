@@ -9,6 +9,7 @@ import { sanitizeSearch, calcNumberOfComponents, isComponentAvailable, isItemBui
 let itemData = null;
 const currentItems = []; 
 let availableComponents = {};
+const builtItems = [];
 
 const currentSearchInput = document.querySelector('#current-search');
 const currentSelectedContainer = document.querySelector('#current-selected');
@@ -70,8 +71,8 @@ function handleFilterSearch(event) {
 
 // Display items the user has selected
 function handleSelectItem(event) {
-    const clickedButton = event.currentTarget;
-    const itemName = clickedButton.getAttribute('data-name');
+    const button = event.currentTarget;
+    const itemName = button.getAttribute('data-name');
     currentSelectedContainer.appendChild(createItemButton(itemName, ['selected-item-btn'], handleRemoveItem));
     currentItems.push(itemName);
     console.log('Selected Items:', currentItems);
@@ -80,14 +81,14 @@ function handleSelectItem(event) {
 
 // Remove item from selection
 function handleRemoveItem(event) {
-    const clickedButton = event.currentTarget;
-    const itemName = clickedButton.getAttribute('data-name');
+    const button = event.currentTarget;
+    const itemName = button.getAttribute('data-name');
     const index = currentItems.indexOf(itemName);
     if (index !== -1) {
         currentItems.splice(index, 1);
     }
     console.log('Selected Items:', currentItems);
-    clickedButton.remove();
+    button.remove();
     renderSalvagedComponents();
 }
 
@@ -103,7 +104,7 @@ function handleClearItem() {
 function renderSalvagedComponents() {
     availableComponentsContainer.replaceChildren();
 
-    availableComponents = calcNumberOfComponents(currentItems, itemData);
+    availableComponents = calcNumberOfComponents(currentItems, builtItems, itemData);
     const fragment = document.createDocumentFragment();
     for (const [component, count] of Object.entries(availableComponents)) {
         for (let i = 0; i < count; i++) {
@@ -111,13 +112,13 @@ function renderSalvagedComponents() {
         }
     }
     availableComponentsContainer.appendChild(fragment);
-    highlightCraftableItems();
+    highlightBuildableItems();
 
     console.log('Available Componets:', availableComponents);
 }
 
-// Highlight craftable items
-function highlightCraftableItems() {
+// Highlight buildable items
+function highlightBuildableItems() {
     document.querySelectorAll('.target-item-btn').forEach((button) => {
         const item = button.getAttribute('data-name');
         if (isComponentAvailable(item, itemData, availableComponents) || 

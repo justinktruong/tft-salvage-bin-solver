@@ -5,7 +5,7 @@ export function sanitizeSearch(searchInput) {
 }
 
 // Calculate the number of components after breaking down completed items
-export function calcNumberOfComponents(currentItems, itemData) {
+export function calcNumberOfComponents(currentItems, builtItems, itemData) {
     const count = {};
     currentItems.forEach((item) => {
         if (itemData.components.includes(item)) {
@@ -14,6 +14,17 @@ export function calcNumberOfComponents(currentItems, itemData) {
         else if (itemData.recipes[item]) {
             itemData.recipes[item].forEach((component) => {
                 count[component] = (count[component] || 0) + 1;
+            });
+        }
+    })
+    
+    builtItems.forEach((item) => {
+        if (itemData.components.includes(item)) {
+            count[item] = count[item] - 1;
+        }
+        else if (itemData.recipes[item]) {
+            itemData.recipes[item].forEach((component) => {
+                count[component] = count[component] - 1;
             });
         }
     })
