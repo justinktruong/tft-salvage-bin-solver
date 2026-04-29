@@ -15,7 +15,10 @@ const currentSearchInput = document.querySelector('#current-search');
 const currentSelectedContainer = document.querySelector('#current-selected');
 const currentClearBtn = document.querySelector('#current-clear');
 
+const targetSearchInput = document.querySelector('#target-search');
 const availableComponentsContainer = document.querySelector('#available-components');
+const targetSelectedContainer = document.querySelector('#target-selected');
+const targetClearBtn = document.querySelector('#target-clear');
 
 
 // ==========================================
@@ -53,11 +56,11 @@ async function initApp() {
 // ==========================================
 // Filter for items using user's search input
 // Reference: https://www.w3schools.com/howto/howto_js_filter_lists.asp
-function handleFilterSearch(event) {
+function handleFilterSearch(buttons) {
     // Set input to lowercase + Strip punctuations and white space from input
     let searchTerm = sanitizeSearch(event.target.value);
 
-    const allItems = document.querySelectorAll('.current-item-btn');
+    const allItems = document.querySelectorAll(buttons);
     allItems.forEach((item) => {
         const itemName = item.getAttribute('data-name')
         if (itemName.includes(searchTerm)) {
@@ -133,10 +136,16 @@ function highlightBuildableItems() {
     });
 }
 
+
 // ==========================================
 // EVENT LISTENERS
 // ==========================================
-currentSearchInput.addEventListener('keyup', handleFilterSearch);
-currentClearBtn.addEventListener('click', handleClearItem);
+currentSearchInput.addEventListener('keyup', () => {
+    handleFilterSearch('.current-item-btn');
+});
+
+targetSearchInput.addEventListener('keyup', () => {
+    handleFilterSearch('.target-item-btn');
+});
 
 initApp();
