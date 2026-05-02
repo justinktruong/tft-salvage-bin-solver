@@ -40,8 +40,8 @@ async function initApp() {
         const targetFragment = document.createDocumentFragment();
     
         itemNames.forEach((item) => {
-            currentFragment.appendChild(createItemButton(item, ['current-item-btn'], handleSelectItem));
-            const targetBtn = createItemButton(item, ['target-item-btn', 'target-item-unavailable'], handleSelectItem);
+            currentFragment.appendChild(createItemButton(item, ['current-item-btn'], (e) => handleSelectItem(e, currentItems, currentSelectedContainer)));
+            const targetBtn = createItemButton(item, ['target-item-btn', 'target-item-unavailable'], (e) => handleSelectItem(e, builtItems, targetSelectedContainer));
             targetBtn.disabled = true; 
             targetFragment.appendChild(targetBtn);
         })
@@ -56,7 +56,7 @@ async function initApp() {
 // ==========================================
 // Filter for items using user's search input
 // Reference: https://www.w3schools.com/howto/howto_js_filter_lists.asp
-function handleFilterSearch(buttons) {
+function handleFilterSearch(event, buttons) {
     // Set input to lowercase + Strip punctuations and white space from input
     let searchTerm = sanitizeSearch(event.target.value);
 
@@ -73,33 +73,48 @@ function handleFilterSearch(buttons) {
 }
 
 // Display items the user has selected
-function handleSelectItem(event) {
+function handleSelectItem(event, itemArray, itemContainer) {
     const button = event.currentTarget;
     const itemName = button.getAttribute('data-name');
-    currentSelectedContainer.appendChild(createItemButton(itemName, ['selected-item-btn'], handleRemoveItem));
-    currentItems.push(itemName);
+    itemContainer.appendChild(createItemButton(itemName, ['selected-item-btn'], (e) => handleRemoveItem(e, itemArray)));
+    itemArray.push(itemName);
     console.log('Selected Items:', currentItems);
+    console.log('Built Items:', builtItems);
     renderSalvagedComponents();
 }
 
 // Remove item from selection
-function handleRemoveItem(event) {
+function handleRemoveItem(event, itemArray) {
     const button = event.currentTarget;
     const itemName = button.getAttribute('data-name');
-    const index = currentItems.indexOf(itemName);
+
+    const index = itemArray.indexOf(itemName);
     if (index !== -1) {
-        currentItems.splice(index, 1);
+        itemArray.splice(index, 1);
     }
+
+    // Reset built items to recalculate components
+    if (itemArray === currentItems) {
+        builtItems.length = 0;
+        targetSelectedContainer.replaceChildren();
+    }
+
     console.log('Selected Items:', currentItems);
     button.remove();
     renderSalvagedComponents();
 }
 
 // Clear all selected items
-function handleClearItem() {
-    currentItems.length = 0;
+function handleClearItem(itemArray) {
+    if (itemArray === currentItems) {
+        currentItems.length = 0;
+        currentSelectedContainer.replaceChildren();
+    }
+
+    builtItems.length = 0;
+    targetSelectedContainer.replaceChildren();
+
     console.log('Selected Items:', currentItems);
-    currentSelectedContainer.replaceChildren();
     renderSalvagedComponents();
 }
 
@@ -117,7 +132,7 @@ function renderSalvagedComponents() {
     availableComponentsContainer.appendChild(fragment);
     highlightBuildableItems();
 
-    console.log('Available Componets:', availableComponents);
+    console.log('Available Components:', availableComponents);
 }
 
 // Highlight buildable items
@@ -137,15 +152,14 @@ function highlightBuildableItems() {
 }
 
 
+
 // ==========================================
 // EVENT LISTENERS
 // ==========================================
-currentSearchInput.addEventListener('keyup', () => {
-    handleFilterSearch('.current-item-btn');
-});
+currentSearchInput.addEventListener('keyup', (e) => handleFilterSearch(e, '.current-item-btn'));
+targetSearchInput.addEventListener('keyup', (e) => handleFilterSearch(e, '.target-item-btn'));
 
-targetSearchInput.addEventListener('keyup', () => {
-    handleFilterSearch('.target-item-btn');
-});
+currentClearBtn.addEventListener('click', () => handleClearItem(currentItems));
+targetClearBtn.addEventListener('click', () => handleClearItem(builtItems));
 
 initApp();
