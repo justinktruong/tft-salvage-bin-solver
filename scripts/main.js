@@ -25,7 +25,7 @@ const targetClearBtn = document.querySelector('#target-clear');
 // INITIALIZATION
 // ==========================================
 async function initApp() {
-    itemData = await fetchJSON('../items.json');
+    itemData = await fetchJSON('./items.json');
     if (itemData) {
         console.log('Successfully loaded data:', itemData);
 
